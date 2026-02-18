@@ -6,7 +6,7 @@ import time
 # ------------------------------
 # PAGE CONFIG
 # ------------------------------
-st.set_page_config(page_title="CyberShield V4", page_icon="🛡️", layout="centered")
+st.set_page_config(page_title="CyberShield", page_icon="🛡️", layout="centered")
 
 # ------------------------------
 # SOUND SYSTEM
@@ -210,7 +210,7 @@ def transition(text):
 # ------------------------------
 # HEADER
 # ------------------------------
-st.markdown('<div class="big-title">🛡️ CyberShield V4</div>', unsafe_allow_html=True)
+st.markdown('<div class="big-title">🛡️ CyberShield</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">AI + Cybersecurity Adventure Game</div>', unsafe_allow_html=True)
 
 st.markdown("""
