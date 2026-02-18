@@ -2,6 +2,7 @@ import streamlit as st
 import random
 import re
 import time
+import base64
 
 # ------------------------------
 # PAGE CONFIG
@@ -9,18 +10,29 @@ import time
 st.set_page_config(page_title="CyberShield V4", page_icon="🛡️", layout="centered")
 
 # ------------------------------
-# SOUND SYSTEM
+# SOUND SYSTEM (FIXED FOR INSTANT PLAY)
 # ------------------------------
 if "muted" not in st.session_state:
     st.session_state.muted = False
 
-def play_sound(filename, filetype="audio/mp3"):
+def play_sound(filename):
     if st.session_state.muted:
         return
+
     try:
-        audio_file = open(filename, "rb")
-        audio_bytes = audio_file.read()
-        st.audio(audio_bytes, format=filetype)
+        with open(filename, "rb") as f:
+            data = f.read()
+
+        b64 = base64.b64encode(data).decode()
+
+        sound_html = f"""
+        <audio autoplay>
+            <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
+        </audio>
+        """
+
+        st.markdown(sound_html, unsafe_allow_html=True)
+
     except:
         pass
 
@@ -235,7 +247,7 @@ if not st.session_state.muted:
 else:
     st.caption("🔇 Sound is OFF")
 
-# BACKGROUND MUSIC
+# BACKGROUND MUSIC (UNCHANGED)
 if not st.session_state.muted:
     try:
         music_file = open("music.mp3", "rb")
@@ -344,6 +356,7 @@ elif st.session_state.level == 2:
 
     def handle_answer(choice):
         play_sound("click.mp3")
+
         if choice == correct:
             play_sound("success.mp3")
             st.success("✅ Correct!")
