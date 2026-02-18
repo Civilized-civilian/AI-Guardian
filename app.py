@@ -222,12 +222,12 @@ def transition(text):
 # ------------------------------
 # HEADER
 # ------------------------------
-st.markdown('<div class="big-title">🛡️ CyberShield V4</div>', unsafe_allow_html=True)
+st.markdown('<div class="big-title">🛡️ CyberShield</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">AI + Cybersecurity Adventure Game</div>', unsafe_allow_html=True)
 
 st.markdown("""
 <div class="desc">
-CyberShield V4 is an interactive cybersecurity game where players learn how to stop phishing scams, detect deepfakes, 
+CyberShield is an interactive cybersecurity game where players learn how to stop phishing scams, detect deepfakes, 
 secure passwords, and protect their digital identity using real-world online safety skills.
 </div>
 """, unsafe_allow_html=True)
