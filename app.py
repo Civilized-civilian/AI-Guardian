@@ -2,113 +2,132 @@ import streamlit as st
 import random
 import re
 import time
-import pandas as pd
-import os
-import matplotlib.pyplot as plt
 
-# -----------------------------------
+# ------------------------------
 # PAGE CONFIG
-# -----------------------------------
+# ------------------------------
 st.set_page_config(page_title="CyberShield V4", page_icon="🛡️", layout="centered")
 
-# -----------------------------------
-# STYLING (DIGITAL BLUE THEME)
-# -----------------------------------
+# ------------------------------
+# SOUND SYSTEM
+# ------------------------------
+if "muted" not in st.session_state:
+    st.session_state.muted = False
+
+def play_sound(filename, filetype="audio/mp3"):
+    if st.session_state.muted:
+        return
+    try:
+        audio_file = open(filename, "rb")
+        audio_bytes = audio_file.read()
+        st.audio(audio_bytes, format=filetype)
+    except:
+        pass
+
+
+# ------------------------------
+# CSS / DESIGN (FULL V4 THEME)
+# ------------------------------
 st.markdown("""
 <style>
-    body {
-        background: radial-gradient(circle at top, #1a0b2e, #050b1e, #020512);
-        color: white;
-    }
 
-    .big-title {
-    font-size: 85px;
-    font-weight: 1000;
-    text-align: center;
-    color: #b36bff;
-text-shadow: 0px 0px 25px rgba(179,107,255,0.9);
+@keyframes glowPulse {
+  0% { text-shadow: 0px 0px 10px rgba(0,255,255,0.3); }
+  50% { text-shadow: 0px 0px 25px rgba(0,255,255,0.8); }
+  100% { text-shadow: 0px 0px 10px rgba(0,255,255,0.3); }
 }
 
-    .subtitle {
-        font-size: 18px;
-        text-align: center;
-        color: #d1d1d1;
-    }
+@keyframes floatBox {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+  100% { transform: translateY(0px); }
+}
 
-    .level-box {
-        padding: 20px;
-        border-radius: 18px;
-        background-color: rgba(255,255,255,0.05);
-        border: 1px solid rgba(179,107,255,0.35);
-        margin-top: 15px;
-        margin-bottom: 15px;
-        box-shadow: 0px 0px 20px rgba(179,107,255,0.15);
-    }
+body {
+    background: radial-gradient(circle at top, #0b2a4a, #050b1e, #020512);
+    color: white;
+}
 
-    .aura-box {
-        padding: 15px;
-        border-radius: 14px;
-        background-color: rgba(100,200,255,0.08);
-        border: 1px solid rgba(100,200,255,0.4);
-        margin-top: 10px;
-        margin-bottom: 10px;
-        box-shadow: 0px 0px 15px rgba(100,200,255,0.12);
-    }
+.big-title {
+    font-size: 88px;
+    font-weight: 1000;
+    text-align: center;
+    color: #00fff7;
+    animation: glowPulse 2s infinite;
+}
 
-    .danger-box {
-        padding: 15px;
-        border-radius: 14px;
-        background-color: rgba(255,50,80,0.10);
-        border: 1px solid rgba(255,50,80,0.45);
-        margin-top: 10px;
-        margin-bottom: 10px;
-        box-shadow: 0px 0px 18px rgba(255,50,80,0.12);
-    }
+.subtitle {
+    font-size: 19px;
+    text-align: center;
+    color: #d7d7d7;
+    margin-top: -15px;
+}
 
-    /* Buttons */
-    div.stButton > button {
-        background: linear-gradient(90deg, #6d28d9, #00c8ff);
-        color: white;
-        border: none;
-        padding: 10px 18px;
-        border-radius: 14px;
-        font-weight: bold;
-        font-size: 16px;
-        box-shadow: 0px 0px 18px rgba(0,200,255,0.25);
-        transition: 0.25s;
-    }
+.desc {
+    font-size: 15px;
+    text-align: center;
+    color: #bfbfbf;
+    margin-top: 8px;
+    margin-bottom: 15px;
+}
 
-    div.stButton > button:hover {
-        transform: scale(1.05);
-        box-shadow: 0px 0px 25px rgba(179,107,255,0.4);
-        cursor: pointer;
-    }
+.level-box {
+    padding: 22px;
+    border-radius: 22px;
+    background-color: rgba(255,255,255,0.05);
+    border: 1px solid rgba(0,255,247,0.35);
+    margin-top: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0px 0px 20px rgba(0,255,247,0.12);
+    animation: floatBox 3s infinite;
+}
+
+.aura-box {
+    padding: 15px;
+    border-radius: 18px;
+    background-color: rgba(0,255,247,0.08);
+    border: 1px solid rgba(0,255,247,0.4);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0px 0px 15px rgba(0,255,247,0.15);
+}
+
+.danger-box {
+    padding: 15px;
+    border-radius: 18px;
+    background-color: rgba(255,50,80,0.10);
+    border: 1px solid rgba(255,50,80,0.5);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0px 0px 18px rgba(255,50,80,0.15);
+}
+
+div.stButton > button {
+    background: linear-gradient(90deg, #00fff7, #6d28d9);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 16px;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0px 0px 18px rgba(0,255,247,0.25);
+    transition: 0.25s;
+    width: 100%;
+}
+
+div.stButton > button:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 30px rgba(109,40,217,0.55);
+    cursor: pointer;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
-# -----------------------------------
-# LEADERBOARD FILE
-# -----------------------------------
-LEADERBOARD_FILE = "leaderboard.csv"
 
-def save_score(name, score):
-    new_data = pd.DataFrame([[name, score]], columns=["Name", "Score"])
-    if os.path.exists(LEADERBOARD_FILE):
-        old_data = pd.read_csv(LEADERBOARD_FILE)
-        combined = pd.concat([old_data, new_data], ignore_index=True)
-    else:
-        combined = new_data
-    combined.to_csv(LEADERBOARD_FILE, index=False)
-
-def load_leaderboard():
-    if os.path.exists(LEADERBOARD_FILE):
-        data = pd.read_csv(LEADERBOARD_FILE)
-        return data.sort_values(by="Score", ascending=False).head(10)
-    return pd.DataFrame(columns=["Name", "Score"])
-
-# -----------------------------------
-# SESSION STATE INIT
-# -----------------------------------
+# ------------------------------
+# SESSION STATE
+# ------------------------------
 if "level" not in st.session_state:
     st.session_state.level = 0
 
@@ -124,199 +143,189 @@ if "phish_round" not in st.session_state:
 if "phish_correct" not in st.session_state:
     st.session_state.phish_correct = 0
 
-if "deepfake_correct" not in st.session_state:
-    st.session_state.deepfake_correct = 0
-
-if "password_success" not in st.session_state:
-    st.session_state.password_success = 0
-
 if "current_msg" not in st.session_state:
     st.session_state.current_msg = None
 
-if "player_name" not in st.session_state:
-    st.session_state.player_name = ""
 
-if "saved" not in st.session_state:
-    st.session_state.saved = False
-
-if "sound_on" not in st.session_state:
-    st.session_state.sound_on = True
-
-# -----------------------------------
+# ------------------------------
 # GAME FUNCTIONS
-# -----------------------------------
+# ------------------------------
 def restart_game():
-    for key in list(st.session_state.keys()):
-        if key not in ["sound_on"]:
-            del st.session_state[key]
     st.session_state.level = 0
     st.session_state.score = 0
     st.session_state.hints_used = 0
     st.session_state.phish_round = 1
     st.session_state.phish_correct = 0
-    st.session_state.deepfake_correct = 0
-    st.session_state.password_success = 0
     st.session_state.current_msg = None
-    st.session_state.player_name = ""
-    st.session_state.saved = False
+
 
 def aura_hint(text):
     st.session_state.hints_used += 1
-    st.markdown(f"<div class='aura'>🤖 <b>AURA:</b> {text}</div>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div class="aura-box">
+        🤖 <b>AURA Hint:</b> {text}
+    </div>
+    """, unsafe_allow_html=True)
+
 
 def password_strength(password):
     points = 0
-    if len(password) >= 10: points += 1
-    if re.search(r"[A-Z]", password): points += 1
-    if re.search(r"[a-z]", password): points += 1
-    if re.search(r"[0-9]", password): points += 1
-    if re.search(r"[@$!%*?&]", password): points += 1
+    if len(password) >= 10:
+        points += 1
+    if re.search(r"[A-Z]", password):
+        points += 1
+    if re.search(r"[a-z]", password):
+        points += 1
+    if re.search(r"[0-9]", password):
+        points += 1
+    if re.search(r"[@$!%*?&]", password):
+        points += 1
     return points
+
 
 def risk_score(message):
     risk = 0
-    suspicious_words = ["urgent", "verify", "password", "locked", "click", "winner", "free", "claim", "confirm", "payment"]
+    suspicious_words = ["urgent", "verify", "password", "locked", "click", "winner", "free", "claim", "confirm"]
     for word in suspicious_words:
         if word in message.lower():
             risk += 15
+
     if "http" in message.lower() or ".com" in message.lower() or ".net" in message.lower():
-        risk += 25
+        risk += 20
+
     if "!!!" in message:
         risk += 15
+
     if len(message) > 80:
         risk += 10
+
     return min(risk, 100)
 
-def terminal_typing(text):
-    output = ""
-    placeholder = st.empty()
-    for char in text:
-        output += char
-        placeholder.markdown(f"<p class='scan'>{output}</p>", unsafe_allow_html=True)
-        time.sleep(0.02)
 
-def scan_animation():
-    lines = [
-        "[AURA SCAN] Booting AI security scanner...",
-        "[AURA SCAN] Running pattern detection...",
-        "[AURA SCAN] Checking suspicious domains...",
-        "[AURA SCAN] Detecting urgency manipulation...",
-        "[AURA SCAN] Applying neural phishing classifier...",
-        "[AURA SCAN] Generating risk score..."
-    ]
-    for line in lines:
-        st.markdown(f"<p class='scan'>{line}</p>", unsafe_allow_html=True)
-        time.sleep(0.35)
+def transition(text):
+    with st.spinner(text):
+        time.sleep(1.2)
 
-def play_sound(effect="success"):
-    if not st.session_state.sound_on:
-        return
-    if effect == "success":
-        st.toast("🔊 *Beep!* (Success Sound)")
-    elif effect == "fail":
-        st.toast("🔊 *Buzz!* (Fail Sound)")
-    elif effect == "scan":
-        st.toast("🔊 *Scanning...*")
 
-# -----------------------------------
+# ------------------------------
 # HEADER
-# -----------------------------------
-st.markdown('<div class="title">🛡️ CyberShield</div>', unsafe_allow_html=True)
+# ------------------------------
+st.markdown('<div class="big-title">🛡️ CyberShield V4</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">AI + Cybersecurity Adventure Game</div>', unsafe_allow_html=True)
+
 st.markdown("""
-<div class="subtitle" style="margin-top:10px;">
-CyberShield V4 is an interactive cybersecurity game where players learn how to spot phishing, stop hackers, detect deepfakes, 
-and protect their digital identity using real-world online safety skills.
+<div class="desc">
+CyberShield V4 is an interactive cybersecurity game where players learn how to stop phishing scams, detect deepfakes, 
+secure passwords, and protect their digital identity using real-world online safety skills.
 </div>
 """, unsafe_allow_html=True)
 
-colA, colB = st.columns(2)
+# MUTE BUTTON
+colA, colB = st.columns([1, 1])
 with colA:
-    st.write(f"### ⭐ Score: {st.session_state.score}")
-with colB:
-    st.session_state.sound_on = st.toggle("🔊 Sound Effects", value=st.session_state.sound_on)
+    if st.button("🔊 Toggle Sound"):
+        st.session_state.muted = not st.session_state.muted
+        st.rerun()
 
-progress_value = st.session_state.level / 7
+with colB:
+    st.write("")
+
+if not st.session_state.muted:
+    st.caption("🔊 Sound is ON")
+else:
+    st.caption("🔇 Sound is OFF")
+
+# BACKGROUND MUSIC
+if not st.session_state.muted:
+    try:
+        music_file = open("music.mp3", "rb")
+        music_bytes = music_file.read()
+        st.audio(music_bytes, format="audio/mp3", loop=True)
+    except:
+        pass
+
+st.write(f"### ⭐ Score: {st.session_state.score} | 🤖 Hints Used: {st.session_state.hints_used}")
+
+progress_value = st.session_state.level / 6
 st.progress(progress_value)
 
 st.divider()
 
-# -----------------------------------
+
+# ------------------------------
 # LEVEL 0 INTRO
-# -----------------------------------
+# ------------------------------
 if st.session_state.level == 0:
-    st.markdown("<div class='panel'>", unsafe_allow_html=True)
-    st.subheader("📖 Mission Briefing")
+    st.markdown('<div class="level-box">', unsafe_allow_html=True)
+    st.subheader("📖 Welcome, Agent.")
     st.write("""
-    Your identity has been stolen by **PHANTOM AI**.
-    
-    You are trapped inside the Digital World.
-    
-    Complete cybersecurity challenges to escape.
-    
-    Your AI assistant: **AURA** 🤖
-    """)
-    st.session_state.player_name = st.text_input("Enter your Agent Name:", value=st.session_state.player_name)
+Your identity has been stolen by **PHANTOM AI**, a hacker that uses artificial intelligence to manipulate and attack users.
+
+You are trapped inside the internet.
+
+Complete cybersecurity challenges, earn points, and escape the digital world.
+
+Your AI assistant **AURA** will guide you.
+""")
     st.markdown("</div>", unsafe_allow_html=True)
 
-    if st.button("🚀 Start Mission"):
-        if st.session_state.player_name.strip() == "":
-            st.error("Enter a name first.")
-        else:
-            terminal_typing("ACCESS GRANTED... ENTERING CYBERSPACE...")
-            st.session_state.level = 1
-            st.rerun()
+    if st.button("🚀 Begin Mission"):
+        play_sound("click.mp3")
+        transition("Booting into the Digital World...")
+        st.session_state.level = 1
+        st.rerun()
 
-# -----------------------------------
+
+# ------------------------------
 # LEVEL 1 PASSWORD
-# -----------------------------------
+# ------------------------------
 elif st.session_state.level == 1:
-    st.markdown("<div class='panel'>", unsafe_allow_html=True)
+    st.markdown('<div class="level-box">', unsafe_allow_html=True)
     st.subheader("🔐 Level 1: Password Panic")
-    st.write("Create a password strong enough to survive PHANTOM AI's brute-force attack.")
+    st.write("Create a strong password to block brute-force attacks.")
     st.markdown("</div>", unsafe_allow_html=True)
 
     password = st.text_input("Enter your password:")
 
-    if st.button("🧪 Test Password"):
+    if st.button("Check Strength"):
+        play_sound("click.mp3")
         strength = password_strength(password)
-        st.write("Strength Meter:")
-        st.progress(strength / 5)
 
         if strength <= 2:
-            play_sound("fail")
-            st.markdown("<div class='danger'>❌ Weak password. Hacker cracked it.</div>", unsafe_allow_html=True)
-            st.session_state.score -= 5
+            play_sound("fail.mp3")
+            st.markdown('<div class="danger-box">❌ Weak password. Hacker cracked it.</div>', unsafe_allow_html=True)
         elif strength == 3:
-            st.warning("⚠️ Medium password. Better, but risky.")
-            st.session_state.score += 5
+            st.warning("⚠️ Medium password. Better, but still risky.")
         else:
-            play_sound("success")
-            st.success("✅ Strong password! Firewall secured.")
-            st.session_state.score += 35
-            st.session_state.password_success = 1
+            play_sound("success.mp3")
+            st.success("✅ Strong password! Access protected.")
+            st.session_state.score += 25
+            transition("Firewall secured...")
             st.session_state.level = 2
             st.rerun()
 
     if st.button("🤖 Ask AURA"):
-        aura_hint("Use 10+ characters with uppercase, lowercase, numbers, and symbols like @ or !")
+        play_sound("click.mp3")
+        aura_hint("Use 10+ characters, mix uppercase, lowercase, numbers, and symbols like @ or !")
 
-# -----------------------------------
-# LEVEL 2 PHISHING (3 ROUNDS)
-# -----------------------------------
+
+# ------------------------------
+# LEVEL 2 PHISHING MULTI ROUND
+# ------------------------------
 elif st.session_state.level == 2:
-    st.markdown("<div class='panel'>", unsafe_allow_html=True)
+    st.markdown('<div class="level-box">', unsafe_allow_html=True)
     st.subheader(f"🎣 Level 2: Phishing Trap (Round {st.session_state.phish_round}/3)")
-    st.write("Identify if the message is SAFE or PHISHING.")
+    st.write("Decide if the message is SAFE or PHISHING.")
     st.markdown("</div>", unsafe_allow_html=True)
 
     phishing_messages = [
-        ("URGENT!!! Your bank account is locked. Verify now: bank-secure-login.net", "PHISHING"),
-        ("Hey, are you free later? We need your help on the science project.", "SAFE"),
-        ("Congratulations! You won a FREE gift card. Claim here: giftcard-winner.com", "PHISHING"),
-        ("Reminder: School starts at 8:00 AM tomorrow.", "SAFE"),
-        ("Security Alert: Suspicious login detected. Confirm your password immediately!", "PHISHING"),
+        ("URGENT!!! Your bank account has been locked. Verify now: bank-secure-login.net", "PHISHING"),
+        ("Hey! Are you coming to the robotics club meeting tomorrow?", "SAFE"),
+        ("Your package delivery failed. Confirm address here: fedex-support-delivery.com", "PHISHING"),
+        ("Reminder: Science fair projects due Friday.", "SAFE"),
+        ("Congratulations!!! You won a FREE iPhone. Click to claim now!", "PHISHING"),
         ("Your teacher posted new homework on Google Classroom.", "SAFE"),
-        ("Your Netflix payment failed. Update your card here: netflix-billing-support.net", "PHISHING"),
+        ("Security alert: suspicious login detected. Confirm password immediately!", "PHISHING"),
     ]
 
     if st.session_state.current_msg is None:
@@ -326,31 +335,30 @@ elif st.session_state.level == 2:
 
     st.write(f"📩 **Message:** {msg}")
 
-    if st.button("🧠 Run AURA Scan"):
-        play_sound("scan")
-        scan_animation()
-        score = risk_score(msg)
-        st.write("AURA Risk Meter:")
-        st.progress(score / 100)
-        st.caption(f"Risk Score: {score}/100")
+    r_score = risk_score(msg)
+    st.write("🤖 AURA Risk Scanner:")
+    st.progress(r_score / 100)
+    st.caption(f"Risk Score: {r_score}/100")
 
     col1, col2 = st.columns(2)
 
     def handle_answer(choice):
+        play_sound("click.mp3")
         if choice == correct:
-            play_sound("success")
-            st.success("✅ Correct decision!")
-            st.session_state.score += 25
+            play_sound("success.mp3")
+            st.success("✅ Correct!")
+            st.session_state.score += 15
             st.session_state.phish_correct += 1
         else:
-            play_sound("fail")
-            st.error("❌ Wrong decision!")
-            st.session_state.score -= 10
+            play_sound("fail.mp3")
+            st.error("❌ Wrong!")
+            st.session_state.score -= 5
 
         st.session_state.phish_round += 1
         st.session_state.current_msg = None
 
         if st.session_state.phish_round > 3:
+            transition("Phishing firewall activated...")
             st.session_state.level = 3
 
         st.rerun()
@@ -364,187 +372,63 @@ elif st.session_state.level == 2:
             handle_answer("PHISHING")
 
     if st.button("🤖 Ask AURA"):
-        aura_hint("Phishing uses urgency + fake links + asks for private information.")
+        play_sound("click.mp3")
+        aura_hint("Check for urgency, weird links, spelling mistakes, or requests for passwords/personal info.")
 
-# -----------------------------------
+
+# ------------------------------
 # LEVEL 3 DEEPFAKE
-# -----------------------------------
+# ------------------------------
 elif st.session_state.level == 3:
-    st.markdown("<div class='panel'>", unsafe_allow_html=True)
+    st.markdown('<div class="level-box">', unsafe_allow_html=True)
     st.subheader("🎭 Level 3: Deepfake Danger")
-    st.write("Someone uploaded a fake video pretending to be you.")
+    st.write("Someone posted a fake video pretending to be you.")
     st.markdown("</div>", unsafe_allow_html=True)
 
     st.write("""
-    **Clues:**
-    - Robotic voice  
-    - Lips slightly off  
-    - Unnatural blinking  
-    - Shadows inconsistent  
-    """)
+**Clues:**
+- The voice sounds robotic  
+- Lips don’t match perfectly  
+- Lighting flickers strangely  
+- The video looks slightly blurred  
+""")
 
-    choice = st.radio("REAL or DEEPFAKE?", ["REAL", "DEEPFAKE"])
+    choice = st.radio("Is the video REAL or a DEEPFAKE?", ["REAL", "DEEPFAKE"])
 
-    if st.button("Submit Answer"):
+    if st.button("Submit"):
+        play_sound("click.mp3")
         if choice == "DEEPFAKE":
-            play_sound("success")
+            play_sound("success.mp3")
             st.success("✅ Correct! It was AI-generated.")
-            st.session_state.score += 35
-            st.session_state.deepfake_correct = 1
+            st.session_state.score += 25
+            transition("Deepfake removed...")
             st.session_state.level = 4
             st.rerun()
         else:
-            play_sound("fail")
+            play_sound("fail.mp3")
             st.error("❌ Wrong! It was a deepfake.")
             st.session_state.score -= 10
 
     if st.button("🤖 Ask AURA"):
-        aura_hint("Deepfakes often have mismatched lip sync, robotic audio, and unnatural facial movement.")
+        play_sound("click.mp3")
+        aura_hint("Deepfakes often have weird blinking, lip-sync errors, robotic audio, and inconsistent shadows.")
 
-# -----------------------------------
-# LEVEL 4 CREATOR PROTECTION
-# -----------------------------------
+
+# ------------------------------
+# LEVEL 4 PRIVACY
+# ------------------------------
 elif st.session_state.level == 4:
-    st.markdown("<div class='panel'>", unsafe_allow_html=True)
-    st.subheader("🎨 Level 4: Creator Protection")
-    st.write("PHANTOM AI is stealing your artwork. Choose the best defense.")
+    st.markdown('<div class="level-box">', unsafe_allow_html=True)
+    st.subheader("👁️ Level 4: Privacy Settings Maze")
+    st.write("Your profile is leaking personal info. Choose the BEST privacy defense.")
     st.markdown("</div>", unsafe_allow_html=True)
 
-    option = st.radio("What protects your creativity the MOST?", [
-        "Post art with no watermark",
-        "Add watermark + keep original files + copyright proof",
-        "Send your art to random people for attention"
+    option = st.radio("Which choice protects you the most?", [
+        "Keep location tagging ON",
+        "Enable Two-Factor Authentication (2FA)",
+        "Make profile public"
     ])
 
-    if st.button("Protect Artwork"):
-        if option == "Add watermark + keep original files + copyright proof":
-            play_sound("success")
-            st.success("✅ Correct! You protected your digital creativity.")
-            st.session_state.score += 30
-            st.session_state.level = 5
-            st.rerun()
-        else:
-            play_sound("fail")
-            st.error("❌ That makes stealing easier.")
-            st.session_state.score -= 10
-
-    if st.button("🤖 Ask AURA"):
-        aura_hint("Creators should watermark work, save originals, and use copyright proof like timestamps.")
-
-# -----------------------------------
-# LEVEL 5 SECRET LEVEL (UNLOCK CONDITION)
-# -----------------------------------
-elif st.session_state.level == 5:
-    if st.session_state.phish_correct == 3 and st.session_state.deepfake_correct == 1:
-        st.markdown("<div class='panel'>", unsafe_allow_html=True)
-        st.subheader("🕵️ SECRET LEVEL: Data Leak Detector")
-        st.write("AURA found a hidden data leak in your profile. Fix it to earn a bonus.")
-
-        option = st.radio("Which info is MOST dangerous to share publicly?", [
-            "Favorite movie",
-            "Home address + school name",
-            "Favorite color"
-        ])
-
-        if st.button("Fix Leak"):
-            if option == "Home address + school name":
-                play_sound("success")
-                st.success("✅ Leak patched! Bonus points earned.")
-                st.session_state.score += 40
-                st.session_state.level = 6
-                st.rerun()
-            else:
-                play_sound("fail")
-                st.error("❌ Wrong. That leak could lead to stalking/identity theft.")
-                st.session_state.score -= 10
-
-        if st.button("🤖 Ask AURA"):
-            aura_hint("Never share location details, addresses, or school names publicly.")
-        st.markdown("</div>", unsafe_allow_html=True)
-    else:
-        st.session_state.level = 6
-        st.rerun()
-
-# -----------------------------------
-# LEVEL 6 FINAL BOSS
-# -----------------------------------
-elif st.session_state.level == 6:
-    st.markdown("<div class='panel'>", unsafe_allow_html=True)
-    st.subheader("💀 FINAL BOSS: PHANTOM AI")
-    st.write("PHANTOM AI launches an AI-powered attack on your identity.")
-    st.write("Choose your best defense strategy.")
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    boss_choice = st.radio("Choose your defense move:", [
-        "Ignore security updates",
-        "Enable encryption + 2FA + strong passwords + updates",
-        "Share passwords with friends",
-        "Click random links to confuse the hacker"
-    ])
-
-    if st.button("⚔️ Execute Defense"):
-        if boss_choice == "Enable encryption + 2FA + strong passwords + updates":
-            play_sound("success")
-            st.success("🏆 You defeated PHANTOM AI and reclaimed your identity!")
-            st.session_state.score += 70
-            st.session_state.level = 7
-            st.rerun()
-        else:
-            play_sound("fail")
-            st.markdown("<div class='danger'>💥 PHANTOM AI hacked you. Wrong move.</div>", unsafe_allow_html=True)
-            st.session_state.score -= 20
-
-    if st.button("🤖 Ask AURA"):
-        aura_hint("Layered security is strongest: updates + encryption + 2FA + strong passwords.")
-
-# -----------------------------------
-# LEVEL 7 WIN SCREEN + DASHBOARD
-# -----------------------------------
-elif st.session_state.level == 7:
-    st.subheader("🎉 MISSION COMPLETE")
-    st.write(f"Agent **{st.session_state.player_name}**, you escaped the Digital World.")
-
-    st.write(f"### ⭐ Final Score: {st.session_state.score}")
-    st.write(f"### 🎣 Phishing Accuracy: {st.session_state.phish_correct}/3")
-    st.write(f"### 🤖 Hints Used: {st.session_state.hints_used}")
-
-    # RANKING + SECRET ENDING
-    if st.session_state.score >= 200:
-        st.success("👑 SECRET ENDING UNLOCKED: CYBER LEGEND")
-        st.balloons()
-        st.write("🔥 AURA upgrades you into the *Digital Guardian Council*.")
-    elif st.session_state.score >= 150:
-        st.success("🥇 Rank: DIGITAL GUARDIAN")
-    elif st.session_state.score >= 100:
-        st.warning("🥈 Rank: FIREWALL FIGHTER")
-    else:
-        st.error("🥉 Rank: CYBER ROOKIE")
-
-    st.info("🧠 Final Tip: Cybersecurity = strong passwords + 2FA + phishing awareness + privacy protection.")
-
-    # DASHBOARD CHART
-    st.subheader("📊 Mission Stats Dashboard")
-
-    labels = ["Phishing Correct", "Phishing Wrong", "Hints Used"]
-    phishing_wrong = 3 - st.session_state.phish_correct
-    values = [st.session_state.phish_correct, phishing_wrong, st.session_state.hints_used]
-
-    fig, ax = plt.subplots()
-    ax.pie(values, labels=labels, autopct="%1.1f%%")
-    st.pyplot(fig)
-
-    # LEADERBOARD SAVE
-    if not st.session_state.saved:
-        if st.button("💾 Save Score to Leaderboard"):
-            save_score(st.session_state.player_name, st.session_state.score)
-            st.session_state.saved = True
-            st.success("Saved successfully!")
-
-    st.subheader("🏆 Top Agents Leaderboard")
-    leaderboard = load_leaderboard()
-    st.dataframe(leaderboard, use_container_width=True)
-
-    if st.button("🔄 Restart Game"):
-        restart_game()
-        st.rerun()
-
+    if st.button("Lock It In"):
+        play_sound("click.mp3")
+        if option == "Enable Two-Factor Authentication (2FA)"
