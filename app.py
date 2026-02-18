@@ -221,8 +221,13 @@ def play_sound(effect="success"):
 # -----------------------------------
 # HEADER
 # -----------------------------------
-st.markdown('<div class="title">🛡️ CyberShield V4</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">AI + Cybersecurity Game | Dark Digital Blue Edition</div>', unsafe_allow_html=True)
+st.markdown('<div class="title">🛡️ CyberShield</div>', unsafe_allow_html=True)
+st.markdown("""
+<div class="subtitle" style="margin-top:10px;">
+CyberShield V4 is an interactive cybersecurity game where players learn how to spot phishing, stop hackers, detect deepfakes, 
+and protect their digital identity using real-world online safety skills.
+</div>
+""", unsafe_allow_html=True)
 
 colA, colB = st.columns(2)
 with colA:
