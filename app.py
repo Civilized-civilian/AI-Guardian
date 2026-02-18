@@ -6,7 +6,7 @@ import time
 # ------------------------------
 # PAGE CONFIG
 # ------------------------------
-st.set_page_config(page_title="CyberShield", page_icon="🛡️", layout="centered")
+st.set_page_config(page_title="CyberShield V4", page_icon="🛡️", layout="centered")
 
 # ------------------------------
 # SOUND SYSTEM
@@ -210,7 +210,7 @@ def transition(text):
 # ------------------------------
 # HEADER
 # ------------------------------
-st.markdown('<div class="big-title">🛡️ CyberShield</div>', unsafe_allow_html=True)
+st.markdown('<div class="big-title">🛡️ CyberShield V4</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">AI + Cybersecurity Adventure Game</div>', unsafe_allow_html=True)
 
 st.markdown("""
@@ -431,4 +431,81 @@ elif st.session_state.level == 4:
 
     if st.button("Lock It In"):
         play_sound("click.mp3")
-        if option == "Enable Two-Factor Authentication (2FA)"
+        if option == "Enable Two-Factor Authentication (2FA)":
+            play_sound("success.mp3")
+            st.success("✅ Correct! 2FA blocks hackers even if they steal your password.")
+            st.session_state.score += 25
+            transition("Privacy locked...")
+            st.session_state.level = 5
+            st.rerun()
+        else:
+            play_sound("fail.mp3")
+            st.error("❌ That increases risk.")
+            st.session_state.score -= 5
+
+    if st.button("🤖 Ask AURA"):
+        play_sound("click.mp3")
+        aura_hint("2FA is one of the best cybersecurity tools because it adds an extra layer of security.")
+
+
+# ------------------------------
+# LEVEL 5 FINAL BOSS
+# ------------------------------
+elif st.session_state.level == 5:
+    st.markdown('<div class="level-box">', unsafe_allow_html=True)
+    st.subheader("💀 Level 5: Boss Fight — PHANTOM AI")
+    st.write("PHANTOM AI is attacking with advanced AI hacking techniques.")
+    st.write("Choose your defense strategy carefully.")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    boss_choice = st.radio("Choose your defense move:", [
+        "Share your password with a trusted friend",
+        "Enable encryption + 2FA + strong passwords",
+        "Click random links to confuse the hacker",
+        "Turn off security updates"
+    ])
+
+    if st.button("⚔️ Attack!"):
+        play_sound("click.mp3")
+        if boss_choice == "Enable encryption + 2FA + strong passwords":
+            play_sound("success.mp3")
+            st.success("🏆 You defeated PHANTOM AI!")
+            st.session_state.score += 50
+            transition("Identity restored...")
+            st.session_state.level = 6
+            st.rerun()
+        else:
+            play_sound("fail.mp3")
+            st.error("💥 Wrong move! PHANTOM AI hacked you.")
+            st.session_state.score -= 15
+
+    if st.button("🤖 Ask AURA"):
+        play_sound("click.mp3")
+        aura_hint("The strongest defense is layered security: encryption + 2FA + strong passwords + updates.")
+
+
+# ------------------------------
+# WIN SCREEN
+# ------------------------------
+elif st.session_state.level == 6:
+    st.subheader("🎉 MISSION COMPLETE!")
+    st.write("You recovered your identity and escaped the Digital World.")
+
+    st.write(f"### ⭐ Final Score: {st.session_state.score}")
+    st.write(f"### 🎣 Phishing Accuracy: {st.session_state.phish_correct}/3")
+    st.write(f"### 🤖 Hints Used: {st.session_state.hints_used}")
+
+    if st.session_state.score >= 120:
+        st.success("🥇 Rank: DIGITAL GUARDIAN")
+        st.balloons()
+    elif st.session_state.score >= 80:
+        st.warning("🥈 Rank: FIREWALL FIGHTER")
+    else:
+        st.error("🥉 Rank: CYBER ROOKIE")
+
+    st.info("🧠 Cyber Tip: Strong passwords + 2FA + avoiding phishing links are your best online defenses.")
+
+    if st.button("🔄 Restart Game"):
+        play_sound("click.mp3")
+        restart_game()
+        st.rerun()
