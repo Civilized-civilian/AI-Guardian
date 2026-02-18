@@ -22,12 +22,12 @@ st.markdown("""
     }
 
     .big-title {
-        font-size: 80px;
-        font-weight: 900;
-        text-align: center;
-        color: #b36bff;
-        text-shadow: 0px 0px 18px rgba(179,107,255,0.9);
-    }
+    font-size: 85px;
+    font-weight: 1000;
+    text-align: center;
+    color: #b36bff;
+text-shadow: 0px 0px 25px rgba(179,107,255,0.9);
+}
 
     .subtitle {
         font-size: 18px;
