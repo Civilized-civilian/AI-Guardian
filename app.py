@@ -7,7 +7,7 @@ import base64
 # ------------------------------
 # PAGE CONFIG
 # ------------------------------
-st.set_page_config(page_title="CyberShield V4", page_icon="🛡️", layout="centered")
+st.set_page_config(page_title="CyberShield", page_icon="🛡️", layout="centered")
 
 # ------------------------------
 # SOUND SYSTEM (FIXED FOR INSTANT PLAY)
@@ -61,7 +61,7 @@ body {
 }
 
 .big-title {
-    font-size: 88px;
+    font-size: 80px;
     font-weight: 1000;
     text-align: center;
     color: #00fff7;
@@ -71,7 +71,7 @@ body {
 .subtitle {
     font-size: 19px;
     text-align: center;
-    color: #d7d7d7;
+    color: #b3b3b3;
     margin-top: -15px;
 }
 
