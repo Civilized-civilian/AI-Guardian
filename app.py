@@ -17,53 +17,71 @@ st.set_page_config(page_title="CyberShield V4", page_icon="🛡️", layout="cen
 st.markdown("""
 <style>
     body {
-        background: radial-gradient(circle at top, #0b2a4a, #050b1e, #020512);
+        background: radial-gradient(circle at top, #1a0b2e, #050b1e, #020512);
         color: white;
     }
-    .title {
-        font-size: 55px;
+
+    .big-title {
+        font-size: 50px;
         font-weight: 900;
         text-align: center;
-        color: #00fff2;
-        text-shadow: 0px 0px 30px rgba(0,255,242,0.8);
-        margin-bottom: -10px;
+        color: #b36bff;
+        text-shadow: 0px 0px 18px rgba(179,107,255,0.9);
     }
+
     .subtitle {
         font-size: 18px;
         text-align: center;
-        color: #b0b0b0;
-        margin-bottom: 30px;
+        color: #d1d1d1;
     }
-    .panel {
+
+    .level-box {
         padding: 20px;
         border-radius: 18px;
-        background-color: rgba(255,255,255,0.04);
-        border: 1px solid rgba(0,255,242,0.25);
+        background-color: rgba(255,255,255,0.05);
+        border: 1px solid rgba(179,107,255,0.35);
         margin-top: 15px;
         margin-bottom: 15px;
-        box-shadow: 0px 0px 20px rgba(0,255,242,0.15);
+        box-shadow: 0px 0px 20px rgba(179,107,255,0.15);
     }
-    .danger {
+
+    .aura-box {
         padding: 15px;
         border-radius: 14px;
-        background-color: rgba(255,0,0,0.08);
-        border: 1px solid rgba(255,0,0,0.35);
+        background-color: rgba(100,200,255,0.08);
+        border: 1px solid rgba(100,200,255,0.4);
         margin-top: 10px;
         margin-bottom: 10px;
+        box-shadow: 0px 0px 15px rgba(100,200,255,0.12);
     }
-    .aura {
+
+    .danger-box {
         padding: 15px;
         border-radius: 14px;
-        background-color: rgba(0,255,242,0.08);
-        border: 1px solid rgba(0,255,242,0.35);
+        background-color: rgba(255,50,80,0.10);
+        border: 1px solid rgba(255,50,80,0.45);
         margin-top: 10px;
         margin-bottom: 10px;
+        box-shadow: 0px 0px 18px rgba(255,50,80,0.12);
     }
-    .scan {
-        font-family: monospace;
-        color: #00fff2;
+
+    /* Buttons */
+    div.stButton > button {
+        background: linear-gradient(90deg, #6d28d9, #00c8ff);
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 14px;
+        font-weight: bold;
         font-size: 16px;
-        text-shadow: 0px 0px 10px rgba(0,255,242,0.6);
+        box-shadow: 0px 0px 18px rgba(0,200,255,0.25);
+        transition: 0.25s;
+    }
+
+    div.stButton > button:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 0px 25px rgba(179,107,255,0.4);
+        cursor: pointer;
     }
 </style>
 """, unsafe_allow_html=True)
